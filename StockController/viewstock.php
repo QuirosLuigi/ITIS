@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Stock View</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="../style.css">
     <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -96,8 +96,8 @@
             </tr>
             <tbody>
             <?php 
-            $DBConnect = mysqli_connect("127.0.0.1:4306", "root", "") or die ("Unable to Connect". mysqli_error());
-            $db = mysqli_select_db($DBConnect, 'itisdev');
+            $DBConnect = mysqli_connect("localhost", "root", "") or die ("Unable to Connect". mysqli_error());
+            $db = mysqli_select_db($DBConnect, 'itisdev_db');
                 $query = mysqli_query($DBConnect, "SELECT i.ingredientName, i.quantity, u.unitName FROM ingredient i JOIN unit u ON i.unitID=u.unitID");
                 while($retrieve = mysqli_fetch_array($query)) {
             ?>

@@ -5,7 +5,7 @@
     $dbuser = "root";
     $dbpassword = "";
 
-    $db_title = "ITISDEV_DB";
+    $db_title = "ITISDEV";
 
     $conn = mysqli_connect($dbname,$dbuser,$dbpassword,$db_title);
 

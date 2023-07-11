@@ -5,7 +5,7 @@
     <html>
     <head>
         <title>Owner Page</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="../style.css">
         <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
     </head>
     <body>

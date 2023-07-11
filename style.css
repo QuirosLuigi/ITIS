@@ -13,6 +13,7 @@
 	--btn-danger:#f44336;
 	--transition-speed: 600ms;
 	--big-card-size: 20vw;
+	--fluperblue: #21325a;
 }
 *{
 	text-decoration: none;
@@ -363,14 +364,64 @@ justify-self: center;
 	height: 100vh;
 	
 }
+
 .reportview form{
-	Color:var(--bg-secondary)
+	border-bottom: #131827;
+
+	border-radius: 26px;
+	background-color: var(--btn-primary);
+	padding: 1vh 1vw 1vh 1vw;
+
 }
-.reportview input{
-	color:#131827
-}
-.reportview button{
+
+.txdate{
 	color: #131827;
+	margin-right: 2vw;
+}
+.sbt_btn{
+	color: black;
+	margin-top: 1vh;
+	width: auto;
+	padding: 1vh 1vw 1vh 1vw;
+	border: none;
+	background: linear-gradient(90deg, rgba(50,36,177,1) 0%, rgba(81,45,212,1) 50%, rgba(113,54,252,1) 100%);
+	color:#ffff;
+	border-radius: 26px;
+	transition: 0.2s;
+	height:3rem;
+	text-align: center;
+	font-weight: 600;
+	font-size: 0.8rem;
+}
+.reporttable{
+	border: 2px solid #cecfd5;
+	border-spacing: 0;
+	width: 96%;
+	margin-left: 2vw;
+	margin-right: 2vw;
+}
+.reporttable th{
+	padding: 10px 15px;
+	border: 1px solid #cecfd5;
+	background: var(--btn-info);
+	color: #fff;
+}
+.reporttable td{
+	border-bottom: 1px solid #cecfd5;
+	border-right: 1px solid #cecfd5;
+	padding: 10px 15px;
+	text-align: center;
+}
+.reporttable tr:hover{
+	background-color: var(--fluperblue);
+}
+.reportlabels{
+	margin-left: 3vw;
+	margin-top: 5vh;
+}
+.reportlabels .backb{
+	text-align: right;
+	margin-right: 3vw;
 }
 
 .roleview{

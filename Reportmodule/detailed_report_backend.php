@@ -1,15 +1,9 @@
-<html>
-    <head>
-        <title>Detailed Report</title>
-	</head>	
-    <body>
         <?php
             $conn = mysqli_connect("localhost", "root", "") or die ("Unable to Connect". mysqli_error($conn));
             mysqli_select_db($conn, 'itisdev');
         ?>
 
         <?php
-            session_start();
             $ingredientName = $_GET['results'];
             $date1 = $_GET['date1'];
             $date2 = $_GET['date2'];
@@ -88,10 +82,14 @@
 			}
             
         ?>
-
+		<div class="reportlabels">
+			<div class="backb">
+			<a href="generatereports.php?date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>" class="sbt_btn">Back</a>
+			</div>
         <h3>Stock Report</h3>
         <h3>Report Created <?php echo "$timestamp"; ?></h3>
         <h3>Detailed report for <?php echo "$ingredientName";?> from <?php echo "$date1";?> to <?php echo "$date2"; ?></h3>
+		</div>
         <table class="reporttable">
         <th>Stock In</th>
         <th>Stock Out</th>
@@ -148,7 +146,11 @@
 		<?php } ?>
 		<?php
     		echo '</table>';
-    		echo "<h3>*END OF REPORT*</h3>";
+			?>
+			<div class="reportlabels">
+			<h3>*END OF REPORT*</h3>
+			</div>
+			<?php
 
 		mysqli_close($conn);
 		?>

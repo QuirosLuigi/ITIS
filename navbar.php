@@ -78,7 +78,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="generatereports.php" class="nav-link">
+                <a href="./Reportmodule/generatereports.php" class="nav-link">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" viewBox="0 0 36 36">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
