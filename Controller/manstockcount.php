@@ -30,7 +30,7 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
 </head>
 <body>
     <?php 
-        include 'navbar.php';
+        @include '../navbar.php';
         if (isset($_POST['ingredientName']) && isset($_POST['unitType'])) {
             $ingredient = $_POST['ingredientName'];
             $unitType   = $_POST['unitType'];

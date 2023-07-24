@@ -12,7 +12,7 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
     <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<?php @include 'navbar.php' ?>
+<?php @include '../navbar.php' ?>
 <div class="stockpurchcard">
     <h2>Input Expired Stock</h2>
     <form action="expiredIngredient.php" method="POST">
