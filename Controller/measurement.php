@@ -1,3 +1,9 @@
+<?php
+session_start();
+
+if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] == "Inventory")
+{
+    ?>
 <?php include 'connect.php'; ?>
 <!DOCTYPE html>
 <html>
@@ -7,7 +13,7 @@
     <!-- <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script> -->
 </head>
 <body>
-    <?php @include 'navbar.php' ?>
+    <?php @include "../navbar.php" ?>
     <div class="stockpurchcard">
         <h2>Add Measurement Unit</h2>
         <h4>Instructions: Conversion specifies the quantity of the system unit in relation to one new unit.</h4>
@@ -43,3 +49,11 @@
     </div>
 </body>
 </html>
+<?php
+}
+
+else{
+    header("Location: ../logout.php");
+    exit();
+}
+?>

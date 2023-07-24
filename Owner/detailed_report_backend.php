@@ -109,7 +109,7 @@
 ?>
 	<div class="reportlabels">
 		<div class="backb"><a href="generatereports.php?date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>" class="sbt_btn">Back</a></div>
-		<h3>Stock Report</h3>
+		<h3><?php echo $ingredientName ?> Stock Report</h3>
 		<h3>Report Created <?php echo "$timestamp"; ?></h3>
 		<h3>Detailed report for <?php echo "$ingredientName";?> from <?php echo "$date1";?> to <?php echo "$date2"; ?></h3>
 	</div>
