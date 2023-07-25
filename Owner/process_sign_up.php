@@ -1,40 +1,33 @@
 <?php
-session_start();
+    session_start();
+    include '../connect.php';
+        if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/viewRecipe.php");
+        if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        else if ($_SESSION['role'] === 'Admin') {
+            if ($_SERVER["REQUEST_METHOD"] === "POST") {  
+                if ($_POST['password'] === $_POST['confirmpassword']) {
+                    $username   = $_POST['username'];
+                    $hasedpass  = md5($_POST['password']);
+                    $firstName  = $_POST['firstName'];
+                    $lastName   = $_POST['lastName'];
+                    $role       = $_POST['role'];
+                    // $hireDate   = $_POST['hireDate']; // Set as NOW() if no input
+                    mysqli_query($DBConnect, "  INSERT INTO user (username, password, firstName, lastName, role, hireDate) 
+                                                VALUES ('$username', '$hasedpass', '$firstName', '$lastName', '$role', NOW())");
 
-if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] == "Owner")
-{
-    ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <?php
-        @include 'connect.php';
-    
-        if ($_POST['password'] == $_POST['confirmpassword']) {
-            
-
-            $passer="INSERT INTO user (username, password, firstName, lastName, role, hireDate)"
-            ." VALUES ('{$_POST['username']}', '{$_POST['password']}', '{$_POST['firstName']}', '{$_POST['lastName']}', '{$_POST['role']}', NOW())";
-
-            // Perform query
-            $query = mysqli_query($DBConnect, $passer);
-            
-        } else {
-            echo "Incorrect Password! Try Again";
-        }  
-    ?>
-</body>
-</html>
-<?php
-}
-
-else{
-    header("Location: ../logout.php");
-    exit();
-}
+                    header("Location: signup_owner.php");
+                }
+            }
+            else {
+                header("Location: notification.php");
+                exit();
+            }
+        }
+    }
+    else {
+        header("Location: ../index.php");
+        exit();
+    }    
 ?>

@@ -310,10 +310,6 @@ justify-self: center;
 	min-width: 220px;
 }
 
-
-
-
-
 .stockview{
 	margin-top: 2vh;
 	margin-left: 10vw;
@@ -467,27 +463,12 @@ justify-self: center;
 .roleview input{
 	color:#131827;
 }
-.roleview .names{
-	padding: 0; 
-	border: none; 
-	background: none; 
-	color: white;
-	font-family: sans-serif;
-}
-.roleview .backb{
-	text-align: right;
-	margin-top: -25px;
-}
 .roleview button{
 	color: #131827;
 }
 .roleview select{
 	color: #131827;
 }
-.roleview option{
-	color: #131827;
-}
-
 .reportview .detailedspecs{
 	display: flex;
 	flex-direction: column;
@@ -530,6 +511,8 @@ justify-self: center;
 	font-weight: 600;
 	font-size: 0.8rem;
 }
+
+
 .approvedishcss{
 	margin: 5vh 3vw 10vh 10vw;
 	padding: 2vh;
@@ -561,8 +544,8 @@ justify-self: center;
 	color:#ffff;
 	border-radius: 26px;
 	transition: 0.2s;
-	width: 6vw;
-	height: 2vw;
+	width: 20%;
+	height:2.5em;
 	text-align: center;
 	font-size: medium;
 	font-weight:600;
@@ -579,8 +562,8 @@ justify-self: center;
 	color:#ffff;
 	border-radius: 26px;
 	transition: 0.2s;
-	width: 6vw;
-	height: 2vw;
+	width: 20%;
+	height:2.5em;
 	text-align: center;
 	font-size: medium;
 	font-weight:600;
@@ -643,6 +626,7 @@ select {
 .card .inputbutton:hover {
     background-color: #0056b3;
 }
+
 .signupview{
 	width: 540px;
 	margin: 40px auto;
@@ -832,80 +816,6 @@ select {
   cursor: pointer;
 }
 
-.contain{
-    padding: 0 10px;
-}
-
-.col-md-9{
-    background-image: url("bgwaves.svg");
-}
-
-.menu , .cart{
-    height: 85vh;
-}
-
-.menu{
-    overflow-y: scroll;
-}
-
-.sub-nav{
-    padding: 10px;
-    border: 0;
-}
-
-.type-buy{
-    width: 100%;
-}
-
-.custom-bg {
-    background-color: #FF0000;
-}
-
-.item-list{
-    position: relative;
-    height: 57vh;
-    padding-right: 2%;
-    overflow-y: scroll;
-}
-
-.quantity{
-    width: 15%;
-}
-
-.card{
-    cursor: pointer;
-}
-
-#buy-type{
-    color: black;
-    border-radius: 0;
-    height: 50px;
-    text-align: center;
-    box-sizing: border-box;
-    padding-left: 38%;
-}
-
-.remove-all{
-    width: 100%;
-    border-radius: 0;
-}
-
-.transparent-button {
-    background: none;
-    padding: 0;
-    cursor: pointer;
-    border: none;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    opacity: 0;
-}
-
-
-
 /*small screens*/
 @media only screen and (max-width: 600px){
 	.navbar{
@@ -942,9 +852,9 @@ select {
 		justify-content: center;
 		align-items: center;
 		text-align: center;
-		
+
 		margin-bottom: 1rem;
-	  }
+	}
 	  .stockpurchcard input{
 		color: black;
 		margin-top: 1rem;
@@ -976,7 +886,7 @@ select {
 		width: var(--big-card-size);
 	}
 	.stockpurchcard{
-		margin-top: 20vh;
+		margin-top: 15vh;
 		padding: 5vh 3vw 8vh 3vw;
 	}
 	.stockpurchcard label {
@@ -1017,5 +927,3 @@ select {
 		width: 12vw;
 	}
 }
-
-

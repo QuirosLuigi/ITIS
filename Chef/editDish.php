@@ -1,19 +1,21 @@
 <?php
-session_start();
-
-if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] == "Chef")
-{
-    ?>
+    session_start();
+    include '../connect.php';
+    if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
+        else if ($_SESSION['role'] === 'Chef' || $_SESSION['role'] === 'Admin') {
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Edit Recipe</title>
-    <link rel="stylesheet" type="text/css" href="../style.css">   
+    <link rel="stylesheet" type="text/css" href="../Owner/style.css">   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="processRecipe.js"></script>
 </head>
 <body>
-    <?php @include '../navbar.php' ?>
+    <?php @include 'navbar.php' ?>
     <div class ="chefview">
 		<div id="title">
 			<h2>Edit a Recipe</h2>
@@ -30,7 +32,7 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
                 <div class = "ingredients">
                     
 					<label for="ingredientname">Ingredients:</label>
-                    <input type="text" id="ingredientname" list="ingredients" name="ingredientname[]" required>
+                    <input type="text" id="ingredientname" name="ingredientname[]" required>
 
                     <label for="quantity">Quantity:</label>
                     <input type="number" id="quanity" name="quanity[]" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
@@ -39,9 +41,6 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
                     <select name="unit[]" class="unit" style="color: black;">
                     <option value="" disabled selected hidden></option>
 					<?php
-                        $DBConnect = mysqli_connect("127.0.0.1:4306", "root", "") or die ("Unable to Connect". mysqli_error());
-                        $db = mysqli_select_db($DBConnect, 'itisdev');
-
                         $query = mysqli_query($DBConnect, "SELECT unitID, unitName FROM unit;");
 
                         foreach ($query as $unit) {
@@ -77,9 +76,6 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
                     <select name="unit[]" style="color: black;">
                     <option value="" disabled selected hidden></option>
 					<?php
-                        $DBConnect = mysqli_connect("127.0.0.1:4306", "root", "") or die ("Unable to Connect". mysqli_error());
-                        $db = mysqli_select_db($DBConnect, 'itisdev');
-
                         $query = mysqli_query($DBConnect, "SELECT unitID, unitName FROM unit;");
 
                         foreach ($query as $unit) {
@@ -96,10 +92,10 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
 </body>
 </html>
 <?php
-}
-
-else{
-    header("Location: ../logout.php");
-    exit();
-}
+        }
+    }
+    else {
+        header("Location: ../index.php");
+        exit();
+    }
 ?>

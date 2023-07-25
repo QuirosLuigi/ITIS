@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Detailed Reports</title>
+        <title>Detailed Disparity Reports</title>
         <link rel="stylesheet" type="text/css" href="style.css">
         <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
     </head>
@@ -19,7 +19,7 @@
     <div class="reportview">
         
     <?php 
-        include 'detailed_report_backend.php';
+        include 'detailed_disparity_backend.php';
     ?>
     </div>
 </body>

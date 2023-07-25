@@ -1,4 +1,4 @@
-<?php
+<?php 
     session_start();
     include '../connect.php';
     if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
@@ -8,14 +8,13 @@
             if ($_SERVER["REQUEST_METHOD"] === "POST") { 
                 include '../connect.php';;
 
-                $newUnit       = $_POST['unitName'];
-                $unitName        = $_POST['unit'];
-                $conversion     = $_POST['conversion'];
+                $ingredientName  = $_POST['ingredientName'];
+                $unitType        = $_POST['unitType'];
 
-                mysqli_query($DBConnect, "  INSERT INTO unit(unitName, type, conversion) 
-                                            SELECT      '$newUnit', type, ($conversion * conversion) AS conversion
+                mysqli_query($DBConnect, "  INSERT INTO ingredient(ingredientName, quantity, unitID) 
+                                            SELECT      '$ingredientName', 0, unitID
                                             FROM        unit 
-                                            WHERE       unitID  = '$unitName';");
+                                            WHERE       type  = '$unitType' AND conversion = 1;");
                         
                 header("Location: viewstock.php");
                 exit;

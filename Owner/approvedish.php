@@ -1,19 +1,21 @@
 <?php
-session_start();
-
-if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] == "Owner")
-{
-    ?>
+    session_start();
+    include '../connect.php';
+    if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/viewRecipe.php");
+        if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        else if ($_SESSION['role'] === 'Admin') {
+?>
 <!DOCTYPE html>
-
 <html>
 <head>
     <title>Dishes to Approve</title>
-    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <?php @include '../navbar.php' ?>
+    <?php @include 'navbar.php' ?>
     <div class="approvedishcss">
         <h2> Dishes to Approve </h2>
         <table class="reporttable">
@@ -21,7 +23,7 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
             <th>Type</th>
             <th>Actions</th>
             <?php 
-                include "connect.php";
+                include '../connect.php';
                 $selectQuery = mysqli_query($DBConnect, "   SELECT nDishID, dishName, type, dateCreated, approved, img 
                                                             FROM pending_dish
                                                             WHERE approved IS NULL 
@@ -35,9 +37,7 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
                             <button type="submit" class="ingredname"><?= $pendingDish['dishName']; ?></button>
                         </form>
                     </td>
-                    <td>
-                        <?= $pendingDish['type']?>
-                    </td>
+                    <td><?= $pendingDish['type']?></td>
                     <td>
                         <form method="POST" action="dishentry.php">
                             <input type="hidden" name="nDishID" value="<?= $pendingDish['nDishID']; ?>"/>
@@ -54,10 +54,10 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
 </body>
 </html>
 <?php
-}
-
-else{
-    header("Location: ../logout.php");
-    exit();
-}
+        }
+    }
+    else {
+        header("Location: ../index.php");
+        exit();
+    }
 ?>

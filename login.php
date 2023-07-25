@@ -1,66 +1,70 @@
 <?php
-session_start();
-include "db_conn.php"; //include db connection file
+    session_start();
+    include "connect.php";
 
-if(isset($_POST['username']) && isset($_POST['password'])) {
+    if (isset($_POST['loginBtn'])) {
+        $uname = mysqli_real_escape_string($DBConnect, $_POST['username']);
+        $upass = mysqli_real_escape_string($DBConnect, $_POST['password']);
+    
+        if (empty($uname)) {
+            header("Location: index.php?error=User Name is required");
+            exit();
+        }
+        else if (empty($upass)) {
+            header("Location: index.php?error=Password is required");
+            exit();
+        }
 
-    function validate($data){
-        $data = trim($data); //remove the spaces
-        $data = stripslashes($data); //remove backslashes
-        $data = htmlspecialchars($data); //fix other special chars
-        return $data;
+        // Prepared statement to prevent SQL injection
+        $stmt   =   $DBConnect -> prepare("SELECT employeeID, username, password, firstName, lastName, role FROM user WHERE username = ? LIMIT 1");
+        $stmt   ->  bind_param("s", $uname);
+        $stmt   ->  execute();
+        $result =   $stmt -> get_result();
+
+        if ($result -> num_rows === 1) {
+            // User found, check password
+            $user = $result -> fetch_assoc();
+            $hashedPassword = $user['password'];
         
-    }
-}
-
-$uname = validate($_POST['username']);
-$pass = validate($_POST['password']);
-
-if(empty($uname)){
-    header("Location: index.php?error=User Name is required");
-    exit();
-}
-else if(empty($pass)){
-    header("Location: index.php?error=Password is required");
-    exit();
-}
-
-$sql = "SELECT * FROM user WHERE username='$uname' AND password='$pass'";
-$result = mysqli_query($conn,$sql);
-if(mysqli_num_rows($result) === 1){
-    $row = mysqli_fetch_assoc($result);
-    if($row['username'] === $uname && $row['password'] === $pass){
-        echo "Logged In";
-       $_SESSION['username'] = $row['username'];
-        $_SESSION['name'] = $row['firstName'];
-        $_SESSION['id'] = $row['employeeID'];
-        $_SESSION['role'] = $row['role'];
-        
-        if($row['role'] == "Cashier")
-        {
-            header("Location: Cashier/cashierhome.php");
+            if ($hashedPassword === md5($upass)) {
+                // Authentication successful
+                session_unset();
+                session_start();
+                $_SESSION['id']   = $user['employeeID'];
+                $_SESSION['username']   = $user['username'];
+                $_SESSION['firstname']  = $user['firstName'];
+                $_SESSION['lastname']   = $user['lastName'];
+                $_SESSION['role']       = $user['role'];
+                
+                // header("Location: test.php");
+                // Redirect to the home pages after successful login
+                switch ($_SESSION['role']) {
+                    case "Admin":
+                        header("Location: Owner/notification.php"); // Subject to change
+                        break;
+                    case "Inventory":
+                        header("Location: Controller/viewstock.php"); // Subject to change
+                        break;
+                    case "Chef":
+                        header("Location: Chef/viewRecipe.php"); // Subject to change
+                        break;
+                    case "Cashier":
+                        header("Location: Cashier/cashier.php");
+                        break;
+                }
+            } else {
+                // Incorrect password
+                header("Location: index.php?error=Invalid password");
+                exit();
+            }
+        } else {
+            // User not found
+            header("Location: index.php?error=Invalid username");
+            exit();
         }
-        elseif($row['role'] == "Chef")
-        {
-            header("Location: Chef/chefhome.php");
-        }
-        elseif($row['role'] == "Owner")
-        {
-            header("Location: Owner/ownerhome.php");
-        }
-        elseif($row['role'] == "Inventory")
-        {
-            header("Location: ./Controller/invcontrollerhome.php");
-        }
+    } 
+    else {
+        header("Location: index.php");
         exit();
-        
     }
-    else{
-       header("Location: index.php?error=Incorrect User Name or Password");
-    }
-}
-else{
-    header("Location:index.php?error=Incorrect User Name or Password");
-    exit();
-}
-
+?>

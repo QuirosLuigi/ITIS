@@ -1,5 +1,5 @@
 <?php 
-    include "connect.php";
+    include '../connect.php';
 
     // Check if a file was uploaded
     if (isset($_FILES['image'])) {

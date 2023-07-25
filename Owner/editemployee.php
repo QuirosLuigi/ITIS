@@ -1,19 +1,22 @@
 <?php
-session_start();
-
-if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] == "Owner")
-{
-    ?>
+    session_start();
+    include '../connect.php';
+    if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/viewRecipe.php");
+        if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        else if ($_SESSION['role'] === 'Admin') {
+?>
 <html>
     <head>
         <title>Employee Details</title>
-		<link rel="stylesheet" type="text/css" href="../style.css">
+		<link rel="stylesheet" type="text/css" href="style.css">
         <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
     </head>
     <body>
-	<?php @include '../navbar.php' ?>
+	<?php include 'navbar.php' ?>
 	<?php
-		@include 'connect.php';
+		include '../connect.php';
 
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			$empid = $_POST['employee_id'];
@@ -65,10 +68,10 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
     </body>
 </html>
 <?php
-}
-
-else{
-    header("Location: ../logout.php");
-    exit();
-}
+        }
+    }
+    else {
+        header("Location: ../index.php");
+        exit();
+    }
 ?>

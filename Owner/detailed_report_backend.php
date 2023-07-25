@@ -1,5 +1,5 @@
 <?php
-	include "connect.php";
+	include "../connect.php";
 	$ingredientName = $_GET['results'];
 	$date1 = $_GET['date1'];
 	$date2 = $_GET['date2'];
@@ -59,69 +59,199 @@
 	// SEPARATE disparity records into STOCKIN and STOCKOUT
 	$dStockIn = [];
 	$dStockOut = [];
-	while ($disparity = mysqli_fetch_array($expiredRecords)) {
+	while ($disparity = mysqli_fetch_array($disparityRecords)) {
 		if ($disparity['manual_quantity'] > $disparity['system_quantity'])
-			$dStockIn[] = ['stock_in' => $disparity['manual_quantity'], 'date' => $disparity['date']];
+			$dStockIn[] = ['stock_in' => abs($disparity['manual_quantity'] - $disparity['system_quantity']), 'date' => $disparity['date']];
 		else if ($disparity['manual_quantity'] < $disparity['system_quantity']) 
-			$dStockOut[] = ['stock_out' => $disparity['system_quantity'], 'date' => $disparity['date']];
+			$dStockOut[] = ['stock_out' => abs($disparity['system_quantity'] - $disparity['manual_quantity']), 'date' => $disparity['date']];
 	}
 
-	// ADD all records of STOCKOUT based on DATE
-	$stockout = [];
-	foreach (array_merge($orders, $expireds, $dStockOut) as $item) {
-		$date = $item['date'];
-		if (!isset($stockout[$date])) {
-			$stockout[$date] = ['date' => $date, 'stock_out' => 0];
-		}
-		$stockout[$date]['stock_out'] += $item['stock_out'];
-	}
-	$stockout = array_values($stockout);
+	$dates = [];
 	
-	// ADD all records of STOCKIN based on DATE
-	$stockin = [];
-	foreach (array_merge($replenishes, $dStockIn) as $item) {
-		$date = $item['date'];
-		if (!isset($stockin[$date])) {
-			$stockin[$date] = ['date' => $date, 'stock_in' => 0];
+	if(!empty($replenishes)){
+		foreach($replenishes as $replenish){
+			array_push($dates, $replenish['date']);
 		}
-		$stockin[$date]['stock_in'] += $item['stock_in'];
 	}
-	$stockin = array_values($stockin);
+	
+	if(!empty($orders)){
+		foreach($orders as $order){
+			array_push($dates, $order['date']);
+		}
+	}
 
-	// MERGE both STOCKIN and STOCKOUT based on DATE
-	$stocks = [];
-	foreach ($stockin as $stock) {
-		$date = $stock['date'];
-		$stocks[$date]['date'] = $date;
-		$stocks[$date]['stock_in'] = $stock['stock_in'];
-		$stocks[$date]['stock_out'] = 0;
+	if(!empty($expireds)){
+		foreach($expireds as $expired){
+			array_push($dates, $expired['date']);
+		}
 	}
 	
-	foreach ($stockout as $stock) {
-		$date = $stock['date'];
-		if (!isset($stocks[$date])) {
-			$stocks[$date]['date'] = $date;
-			$stocks[$date]['stock_in'] = 0;
+	if(!empty($dStockIn)){
+		foreach($dStockIn as $stock_in){
+			array_push($dates, $stock_in['date']);
 		}
-		$stocks[$date]['stock_out'] = $stock['stock_out'];
+	}	
+	
+	if(!empty($dStockOut)){
+		foreach($dStockOut as $stock_out){
+			array_push($dates, $stock_out['date']);
+		}
 	}
-	$stocks = array_values($stocks);
+
+	rsort($dates);
+
+	$dates = array_unique($dates);
+
+	
 ?>
 	<div class="reportlabels">
 		<div class="backb"><a href="generatereports.php?date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>" class="sbt_btn">Back</a></div>
-		<h3><?php echo $ingredientName ?> Stock Report</h3>
+		<h3>Stock Report</h3>
 		<h3>Report Created <?php echo "$timestamp"; ?></h3>
 		<h3>Detailed report for <?php echo "$ingredientName";?> from <?php echo "$date1";?> to <?php echo "$date2"; ?></h3>
 	</div>
 	<table class="reporttable">
-		<th>Stock In</th>
-		<th>Stock Out</th>
-		<th>Date</th>
-		<?php foreach ($stocks as $stock) {
+		<thead>
+            <tr>
+                <th colspan="2">Stock In</th>
+                <th colspan="3">Stock Out</th>
+                <th rowspan="2">Date</th>
+            </tr>
+
+            <tr>
+				<th>Replenish</th>
+                <th>Disparities</th>
+                <th>Orders</th>
+                <th>Expired</th>
+				<th>Disparities</th>
+            </tr>
+        </thead>
+
+		<?php
+			$counter = 0;
+			$temp = 0;
+		?>
+
+		<?php foreach ($dates as $date) {
 			echo "<tr>";
-			echo	"<td>" . $stock['stock_in']		. "</td>";
-			echo	"<td>" . $stock['stock_out']	. "</td>";
-			echo	"<td>" . $stock['date']			. "</td>";
+
+			//for Replenish column
+			if(!empty($replenishes)){
+				foreach($replenishes as $replenish){
+					if($replenish['date'] == $date){
+						$counter++;
+						$temp+= $replenish['stock_in'];
+					}
+				}
+			}
+
+			if($counter > 0){
+		?>
+			<td onclick="window.location.href='detailed_replenish.php?name=<?php echo $ingredientName; ?>&date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>';"><?php echo $temp; ?></td>
+		<?php	
+				$temp = 0;
+				$counter = 0;
+			}
+			else{
+		?>
+			<td onclick="window.location.href='detailed_replenish.php?name=<?php echo $ingredientName; ?>&date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>';"><?php echo $temp; ?></td>
+		<?php
+			$temp = 0;
+			}
+
+			//for DISPARITIES Stock In column
+			if(!empty($dStockIn)){
+				foreach($dStockIn as $stock_in){
+					if($stock_in['date'] == $date){
+						$counter++;
+						$temp+= $stock_in['stock_in'];
+					}
+				}
+			}
+
+			if($counter > 0){
+		?>
+				<td onclick="window.location.href='detailed_disparities.php?name=<?php echo $ingredientName; ?>&date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>';"><?php echo $temp; ?></td>
+		<?php	
+					$temp = 0;
+					$counter = 0;
+			}
+			else{
+		?>
+				<td onclick="window.location.href='detailed_disparities.php?name=<?php echo $ingredientName; ?>&date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>';"><?php echo $temp; ?></td>
+		<?php
+				$temp = 0;
+			}
+
+			//for ORDERS column
+			if(!empty($orders)){
+				foreach($orders as $order){
+					if($order['date'] == $date){
+						$counter++;
+						$temp+= $order['stock_out'];
+					}
+				}
+			}
+			if($counter > 0){
+		?>
+			<td onclick="window.location.href='detailed_orders.php?name=<?php echo $ingredientName; ?>&date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>';"><?php echo "$temp"; ?></td>
+		<?php		
+				$temp = 0;
+				$counter = 0;
+			}
+			else{
+		?>
+			<td onclick="window.location.href='detailed_orders.php?name=<?php echo $ingredientName; ?>&date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>';"><?php echo "$temp"; ?></td>
+		<?php
+			}
+
+			//for EXPIRED column
+			if(!empty($expireds)){
+				foreach($expireds as $expired){
+					if($expired['date'] == $date){
+						$counter++;
+						$temp+= $expired['stock_out'];
+					}
+				}
+			}
+			
+			if($counter > 0){
+		?>
+				<td onclick="window.location.href='detailed_expired.php?name=<?php echo $ingredientName; ?>&date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>';"><?php echo "$temp"; ?></td>
+		<?php			
+				$temp = 0;
+				$counter = 0;
+			}
+			else{
+		?>
+				<td onclick="window.location.href='detailed_expired.php?name=<?php echo $ingredientName; ?>&date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>';"><?php echo "$temp"; ?></td>
+		<?php		
+			}
+
+			//for DISPARITIES Stock Out column
+			if(!empty($dStockOut)){
+			foreach($dStockOut as $stock_out){
+				if($stock_out['date'] == $date){
+					$counter++;
+					$temp+= $stock_out['stock_out'];
+					}
+				}
+			}
+			
+			if($counter > 0){
+		?>
+				<td onclick="window.location.href='detailed_disparities.php?name=<?php echo $ingredientName; ?>&date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>';"><?php echo "$temp"; ?></td>
+		<?php			
+				$temp = 0;
+				$counter = 0;
+			}
+			else{
+		?>
+				<td onclick="window.location.href='detailed_disparities.php?name=<?php echo $ingredientName; ?>&date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>';"><?php echo "$temp"; ?></td>
+		<?php		
+			}
+
+			echo	"<td>" . $date			. "</td>";
 			echo "</tr>";
 		} ?>
 		

@@ -1,18 +1,21 @@
 <?php
-session_start();
-
-if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] == "Owner")
-{
-    ?>
+    session_start();
+    include '../connect.php';
+    if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/viewRecipe.php");
+        if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        else if ($_SESSION['role'] === 'Admin') {
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Generate Reports</title>
-    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<?php @include '../navbar.php' ?>
+<?php include 'navbar.php' ?>
 <div class="reportview">
 <h1>Inventory/Stock Report</h1>
 <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -27,10 +30,10 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
 </body>
 </html>
 <?php
-}
-
-else{
-    header("Location: ../logout.php");
-    exit();
-}
+        }
+    }
+    else {
+        header("Location: ../index.php");
+        exit();
+    }
 ?>

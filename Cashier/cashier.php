@@ -1,11 +1,10 @@
 <?php
-session_start();
-
-if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] == "Cashier")
-{
-    ?>
-<?php
-    include 'connect.php';
+    session_start();
+    include '../connect.php';
+    if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        if ($_SESSION['role']  === 'Chef') header("Location: ../Chef/viewRecipe.php");
+        else if ($_SESSION['role'] === 'Cashier' || $_SESSION['role'] === 'Admin') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +15,7 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="cashier.css">
 
     <title>Take Order</title>
 </head>
@@ -34,7 +33,7 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-3 p-3 cart">
-                <div class="sub-nav text-left mb-5" style="background-color: #3a4f8a; color: white;"><p class="my-0"><span class="mr-1"><img src="https://img.icons8.com/pastel-glyph/30/000000/user-male--v1.png"></span >Employee: </p></div>
+                <div class="sub-nav text-left mb-5" style="background-color: #3a4f8a; color: white;"><p class="my-0"><span class="mr-1"><img src="https://img.icons8.com/pastel-glyph/30/000000/user-male--v1.png"></span >Employee: <?= $_SESSION['firstname'] . " " . $_SESSION['lastname'] ?><a href="../logout.php"><button style="float: right;">Logout</button></a></p></div>
                     <div class="item-list mt-2">
                         <div id="loop-invoice">
                             <!-- loop sidebar items -->
@@ -58,7 +57,7 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
                                 echo     '<div class="card-body">';
                                 echo         '<h5 class="card-title" style="color: white">' . $dish['dishName'] . '</h5>';
                                 echo         '<p class="card-text" style="color: white">' . $dish['price'] . '</p>';
-                                echo         '<button id="btn' . $dish['dishName'] . '" class="transparent-button" onclick="chooseDish(\'' . $dish['dishName'] . '\', '.$dish['price'].')"></button>';
+                                echo         '<button id="btn' . $dish['dishName'] . '" class="transparent-button" onclick="chooseDish(\'' . $dish['dishName'] . '\', \'' . $dish['img'] . '\', '.$dish['price'].')"></button>';
                                 echo     '</div>';
                                 echo '</div>';
                             }
@@ -91,10 +90,10 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
 </body>
 </html>
 <?php
-}
-
-else{
-    header("Location: ../logout.php");
-    exit();
-}
+        }
+    }
+    else {
+        header("Location: ../index.php");
+        exit();
+    }
 ?>

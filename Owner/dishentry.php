@@ -1,23 +1,26 @@
 <?php
-session_start();
-
-if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] == "Owner")
-{
-    ?>
+    session_start();
+    include '../connect.php';
+    if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/viewRecipe.php");
+        if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        else if ($_SESSION['role'] === 'Admin') {
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Reports</title>
-    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<?php @include '../navbar.php' ?>
+<?php include 'navbar.php' ?>
 <div class="reportview">
     <h2> Enter Dish Details </h2>
     <div style="width: 50%">
         <?php 
-            @include "connect.php";
+            include '../connect.php';
             $nDishID = $_POST['nDishID'];
 
             if(isset($_POST['approve'])) {
@@ -38,7 +41,7 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
         </form>
     </div>
     <!-- ingridient list  -->
-    <h3>Ingridients</h3>
+    <h3>Ingredients</h3>
     <ul>
         <?php 
             $selectRecipeQuery = mysqli_query($DBConnect, " SELECT i.ingredientName, pr.quantity, u.unitName 
@@ -59,10 +62,10 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
 </body>
 </html>
 <?php
-}
-
-else{
-    header("Location: ../logout.php");
-    exit();
-}
+        }
+    }
+    else {
+        header("Location: ../index.php");
+        exit();
+    }
 ?>

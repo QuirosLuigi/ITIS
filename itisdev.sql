@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:4306
--- Generation Time: Jul 21, 2023 at 10:52 AM
+-- Generation Time: Jul 25, 2023 at 08:09 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -42,10 +42,7 @@ CREATE TABLE `dish` (
 
 INSERT INTO `dish` (`dishID`, `dishName`, `dateCreated`, `price`, `Active`, `img`) VALUES
 (2001, 'Spaghetti', '2023-07-13 13:43:16', 60, 'Yes', 'imgs/Spaghetti.png'),
-(2002, 'Pizza', '2023-07-13 13:43:16', 150, 'Yes', 'imgs/Pizza.png'),
-(2011, 'Bread', '2023-07-20 12:11:40', 50, 'No', 'imgs/64b8b3b320ba0_Bread.jpg'),
-(2012, 'Bread', '2023-07-20 12:13:16', 100, 'No', 'imgs/64b8b43e36704_New Bread.jpg'),
-(2013, 'Bread', '2023-07-20 16:52:33', 50, 'Yes', 'imgs/64b8f5b3cec91_Bread.jpg');
+(2002, 'Pizza', '2023-07-13 13:43:16', 150, 'Yes', 'imgs/Pizza.png');
 
 -- --------------------------------------------------------
 
@@ -60,7 +57,7 @@ CREATE TABLE `disparity` (
   `mQuantity` float NOT NULL,
   `approved` enum('Yes','No') DEFAULT NULL,
   `createdAt` datetime NOT NULL,
-  `createdBy` int(11) DEFAULT NULL
+  `createdBy` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -68,11 +65,7 @@ CREATE TABLE `disparity` (
 --
 
 INSERT INTO `disparity` (`logID`, `ingredientID`, `sQuantity`, `mQuantity`, `approved`, `createdAt`, `createdBy`) VALUES
-(15, 1001, 1270, 1300, 'Yes', '2023-07-20 00:01:49', NULL),
-(16, 1002, 1100, 1400, 'Yes', '2023-07-20 01:36:21', NULL),
-(17, 1002, 1500, 1600, 'No', '2023-07-20 01:42:31', NULL),
-(18, 1002, 1600, 1700, 'Yes', '2023-07-20 12:09:10', NULL),
-(19, 1001, 1300, 1000, NULL, '2023-07-20 23:08:29', NULL);
+(37, 1004, 100, 200, NULL, '2023-07-25 11:38:02', 2);
 
 -- --------------------------------------------------------
 
@@ -83,9 +76,9 @@ INSERT INTO `disparity` (`logID`, `ingredientID`, `sQuantity`, `mQuantity`, `app
 CREATE TABLE `expired` (
   `expiredID` int(11) NOT NULL,
   `ingredientID` int(11) NOT NULL,
-  `quantity` float DEFAULT NULL,
-  `expiredDate` datetime DEFAULT NULL,
-  `updatedBy` int(11) DEFAULT NULL
+  `quantity` float NOT NULL,
+  `expiredDate` datetime NOT NULL,
+  `updatedBy` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
@@ -107,8 +100,9 @@ CREATE TABLE `ingredient` (
 
 INSERT INTO `ingredient` (`ingredientID`, `ingredientName`, `quantity`, `unitID`) VALUES
 (1001, 'Flour', 1000, 1004),
-(1002, 'Chicken', 1400, 1002),
-(1003, 'Egg', 0, 1005);
+(1002, 'Chicken', 1000, 1002),
+(1003, 'Egg', 100, 1005),
+(1004, 'Corn', 100, 1002);
 
 -- --------------------------------------------------------
 
@@ -118,9 +112,9 @@ INSERT INTO `ingredient` (`ingredientID`, `ingredientName`, `quantity`, `unitID`
 
 CREATE TABLE `orders` (
   `orderID` int(11) NOT NULL,
-  `total` float DEFAULT NULL,
-  `createdBy` int(11) DEFAULT NULL,
-  `createdAt` datetime DEFAULT NULL
+  `total` float NOT NULL,
+  `createdBy` int(11) NOT NULL,
+  `createdAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
@@ -133,7 +127,7 @@ CREATE TABLE `order_item` (
   `ItemID` int(11) NOT NULL,
   `orderID` int(11) NOT NULL,
   `dishID` int(11) NOT NULL,
-  `quantity` float DEFAULT NULL
+  `quantity` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
@@ -148,7 +142,7 @@ CREATE TABLE `pending_dish` (
   `type` enum('Edit','New') NOT NULL,
   `dateCreated` varchar(45) NOT NULL,
   `approved` enum('Yes','No') DEFAULT NULL,
-  `createdBy` int(11) DEFAULT NULL,
+  `createdBy` int(11) NOT NULL,
   `img` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -157,10 +151,7 @@ CREATE TABLE `pending_dish` (
 --
 
 INSERT INTO `pending_dish` (`nDishID`, `dishName`, `type`, `dateCreated`, `approved`, `createdBy`, `img`) VALUES
-(45, 'Bread', 'New', '2023-07-20 12:10:27', 'Yes', NULL, 'imgs/64b8b3b320ba0_Bread.jpg'),
-(46, 'Bread', 'Edit', '2023-07-20 12:12:46', 'Yes', NULL, 'imgs/64b8b43e36704_New Bread.jpg'),
-(47, 'Bread', 'Edit', '2023-07-20 16:52:03', 'Yes', NULL, 'imgs/64b8f5b3cec91_Bread.jpg'),
-(48, 'Bread', 'Edit', '2023-07-20 19:46:27', 'No', NULL, 'imgs/64b91e933a8d3_New Bread.jpg');
+(53, 'Bread', 'New', '2023-07-25 12:21:54', NULL, 2, 'imgs/64bf4de29a8a9_Bread.jpg');
 
 -- --------------------------------------------------------
 
@@ -172,7 +163,7 @@ CREATE TABLE `pending_recipe` (
   `nRecipeID` int(11) NOT NULL,
   `nDishID` int(11) NOT NULL,
   `ingredientID` int(11) NOT NULL,
-  `quantity` float DEFAULT NULL
+  `quantity` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -180,11 +171,7 @@ CREATE TABLE `pending_recipe` (
 --
 
 INSERT INTO `pending_recipe` (`nRecipeID`, `nDishID`, `ingredientID`, `quantity`) VALUES
-(35, 45, 1001, 10),
-(36, 46, 1001, 20),
-(37, 46, 1002, 100),
-(38, 47, 1001, 10),
-(39, 48, 1001, 15);
+(43, 53, 1001, 0);
 
 -- --------------------------------------------------------
 
@@ -196,7 +183,7 @@ CREATE TABLE `recipe` (
   `recipeID` int(11) NOT NULL,
   `dishID` int(11) NOT NULL,
   `ingredientID` int(11) NOT NULL,
-  `quantity` float DEFAULT NULL
+  `quantity` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -206,11 +193,7 @@ CREATE TABLE `recipe` (
 INSERT INTO `recipe` (`recipeID`, `dishID`, `ingredientID`, `quantity`) VALUES
 (3001, 2001, 1003, 5),
 (3002, 2002, 1002, 100),
-(3003, 2002, 1001, 10),
-(3011, 2011, 1001, 10),
-(3012, 2012, 1001, 20),
-(3013, 2012, 1002, 100),
-(3015, 2013, 1001, 10);
+(3003, 2002, 1001, 10);
 
 -- --------------------------------------------------------
 
@@ -221,9 +204,9 @@ INSERT INTO `recipe` (`recipeID`, `dishID`, `ingredientID`, `quantity`) VALUES
 CREATE TABLE `replenish` (
   `transactionID` int(11) NOT NULL,
   `ingredientID` int(11) NOT NULL,
-  `quantity` float DEFAULT NULL,
-  `boughtDate` datetime DEFAULT NULL,
-  `createdBy` int(11) DEFAULT NULL
+  `quantity` float NOT NULL,
+  `boughtDate` datetime NOT NULL,
+  `createdBy` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='t';
 
 -- --------------------------------------------------------
@@ -234,7 +217,7 @@ CREATE TABLE `replenish` (
 
 CREATE TABLE `unit` (
   `unitID` int(11) NOT NULL,
-  `unitName` varchar(45) DEFAULT NULL,
+  `unitName` varchar(45) NOT NULL,
   `type` enum('Mass','Volume','Count') NOT NULL,
   `conversion` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -258,12 +241,12 @@ INSERT INTO `unit` (`unitID`, `unitName`, `type`, `conversion`) VALUES
 
 CREATE TABLE `user` (
   `employeeID` int(11) NOT NULL,
-  `username` varchar(45) DEFAULT NULL,
-  `password` varchar(200) DEFAULT NULL,
-  `firstName` varchar(45) DEFAULT NULL,
-  `lastName` varchar(45) DEFAULT NULL,
+  `username` varchar(45) NOT NULL,
+  `password` varchar(200) NOT NULL,
+  `firstName` varchar(45) NOT NULL,
+  `lastName` varchar(45) NOT NULL,
   `role` varchar(45) NOT NULL,
-  `hireDate` date DEFAULT NULL
+  `hireDate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
@@ -271,8 +254,12 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`employeeID`, `username`, `password`, `firstName`, `lastName`, `role`, `hireDate`) VALUES
-(1, 'jonjon123', 'pass123', 'Jonathan', 'Gonzalez', 'Chef', '2023-07-11'),
-(4, 'rafayell', 'pass123', 'Rafael Christian', 'Sanchez', 'Inventory', '2023-07-18');
+(1, 'jonjon123', '849bf69bddf1da737db2169d0b24f2f9', 'Jonathan', 'Lin', 'Admin', '2023-07-23'),
+(2, 'rafayell', '180daa9fb0c88c8ac77a0af6633ed412', 'Rafael Christian', 'Sanchez', 'Admin', '2023-07-23'),
+(3, 'Inventory', '4d604dd8f008145471dc845683399189', 'Inventory', 'Inventory', 'Inventory', '2023-07-23'),
+(4, 'Cashier', 'e7f85ad205399503a678592df8aadeb1', 'Cashier', 'Cashier', 'Cashier', '2023-07-23'),
+(5, 'Chef', '8fd82b8864d71ed7fa12b59e6e34cd1c', 'Chef', 'Chef', 'Chef', '2023-07-23'),
+(19, 'Admin', 'e3afed0047b08059d0fada10f400c1e5', 'John', 'Doe', 'Admin', '2023-07-25');
 
 --
 -- Indexes for dumped tables
@@ -299,7 +286,9 @@ ALTER TABLE `disparity`
 --
 ALTER TABLE `expired`
   ADD PRIMARY KEY (`expiredID`),
-  ADD UNIQUE KEY `expiredID` (`expiredID`);
+  ADD UNIQUE KEY `expiredID` (`expiredID`),
+  ADD KEY `fk_Expired_Ingredient` (`ingredientID`),
+  ADD KEY `fk_Expired_User` (`updatedBy`);
 
 --
 -- Indexes for table `ingredient`
@@ -321,7 +310,9 @@ ALTER TABLE `orders`
 --
 ALTER TABLE `order_item`
   ADD PRIMARY KEY (`ItemID`),
-  ADD UNIQUE KEY `ItemID_UNIQUE` (`ItemID`);
+  ADD UNIQUE KEY `ItemID_UNIQUE` (`ItemID`),
+  ADD KEY `fk_Order_Dish` (`dishID`),
+  ADD KEY `fk_Order_Item` (`orderID`);
 
 --
 -- Indexes for table `pending_dish`
@@ -345,7 +336,8 @@ ALTER TABLE `pending_recipe`
 ALTER TABLE `recipe`
   ADD PRIMARY KEY (`recipeID`),
   ADD UNIQUE KEY `recipeID_UNIQUE` (`recipeID`),
-  ADD KEY `fk_Recipe_Ingredients_idx` (`ingredientID`);
+  ADD KEY `fk_Recipe_Ingredients_idx` (`ingredientID`),
+  ADD KEY `fk_Recipe_Dish` (`dishID`);
 
 --
 -- Indexes for table `replenish`
@@ -353,7 +345,8 @@ ALTER TABLE `recipe`
 ALTER TABLE `replenish`
   ADD PRIMARY KEY (`transactionID`),
   ADD UNIQUE KEY `transactionID_UNIQUE` (`transactionID`),
-  ADD KEY `fk_Transaction_User_idx` (`createdBy`);
+  ADD KEY `fk_Transaction_User_idx` (`createdBy`),
+  ADD KEY `fk_Replenish_Ingredient` (`ingredientID`);
 
 --
 -- Indexes for table `unit`
@@ -384,43 +377,43 @@ ALTER TABLE `dish`
 -- AUTO_INCREMENT for table `disparity`
 --
 ALTER TABLE `disparity`
-  MODIFY `logID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `logID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `expired`
 --
 ALTER TABLE `expired`
-  MODIFY `expiredID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `expiredID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `ingredient`
 --
 ALTER TABLE `ingredient`
-  MODIFY `ingredientID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1004;
+  MODIFY `ingredientID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1005;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `orderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `orderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `order_item`
 --
 ALTER TABLE `order_item`
-  MODIFY `ItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `ItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=118;
 
 --
 -- AUTO_INCREMENT for table `pending_dish`
 --
 ALTER TABLE `pending_dish`
-  MODIFY `nDishID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `nDishID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `pending_recipe`
 --
 ALTER TABLE `pending_recipe`
-  MODIFY `nRecipeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `nRecipeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `recipe`
@@ -432,7 +425,7 @@ ALTER TABLE `recipe`
 -- AUTO_INCREMENT for table `replenish`
 --
 ALTER TABLE `replenish`
-  MODIFY `transactionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `transactionID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `unit`
@@ -444,7 +437,7 @@ ALTER TABLE `unit`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `employeeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `employeeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Constraints for dumped tables

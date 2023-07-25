@@ -1,10 +1,10 @@
-function chooseDish(dishName, dishPrice) {
+function chooseDish(dishName, img, dishPrice) {
     var parentElement = document.getElementById('loop-invoice');
     var newElement = document.createElement('div');
 
     newElement.innerHTML =  
         '<div class="media mb-2">'                                                                                                                                                              +
-            '<img src="img/' + dishName + '.png" class="align-self-center mr-3" width="95">'                                                                                                    +
+            '<img src="../Chef/' + img +'" class="align-self-center mr-3" width="95">'                                                                                                    +
             '<div class="media-body">'                                                                                                                                                          +
                 '<h6 class="mt-0" id="dish_' + dishName + '">' + dishName + '</h6>'                                                                                                                                        +
                 '<p>Php <span id="price_' + dishName + '" value="' + dishPrice + '">' + dishPrice + '</span></p>'                                                                               +

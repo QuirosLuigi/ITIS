@@ -6,7 +6,7 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="style.css"> <!-- user style.css for decoration -->
+        <link rel="stylesheet" href="Owner/style.css"> <!-- user style.css for decoration -->
     </head>
     <body>
         <div class="loginwrapper">
@@ -26,7 +26,7 @@
                 <!--<label>Password </label>-->
                 <input type="password" name="password" placeholder="Password"><br>
                 </div>
-                <button type="submit" class="loginsubmitbutton"> LOGIN </button>
+                <button type="submit" class="loginsubmitbutton" name="loginBtn"> LOGIN </button>
         </div>
         </div>
     </body>

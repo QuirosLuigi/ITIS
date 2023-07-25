@@ -1,23 +1,26 @@
 <?php
-session_start();
-
-if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] == "Owner")
-{
-    ?>
+    session_start();
+    include '../connect.php';
+    if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
+        if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/viewRecipe.php");
+        if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        else if ($_SESSION['role'] === 'Admin') {
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Reports</title>
-    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<?php @include '../navbar.php' ?>
+<?php include 'navbar.php' ?>
 <div class="reportview">
     <h2> Dish Details </h2>
     <div style="width: 50%">
         <?php 
-            include "connect.php";
+            include '../connect.php';
             $nDishID = $_POST['nDishID'];
             $selectDishQuery = mysqli_query($DBConnect, "   SELECT nDishID, dishName, dateCreated, approved, img 
                                                             FROM pending_dish
@@ -35,17 +38,17 @@ if(isset($_SESSION['id']) && isset($_SESSION['username']) && $_SESSION['role'] =
                                                             FROM pending_recipe pr 	JOIN ingredient i	ON i.ingredientID=pr.ingredientID
                                                                                     JOIN unit u			ON i.unitID=u.unitID
                                                             WHERE pr.nDishID = $nDishID;"); 
-            while ($pendingRecipe = mysqli_fetch_array($selectRecipeQuery)) echo "<li>" . $pendingRecipe['ingredientName'] . "</li>";
+            while ($pendingRecipe = mysqli_fetch_array($selectRecipeQuery)) echo "<li>" . $pendingRecipe['ingredientName'] . " " . $pendingRecipe['quantity'] . " ". $pendingRecipe['unitName'] ."</li>";
         ?>
     </ul>
 </div>
 </body>
 </html>
 <?php
-}
-
-else{
-    header("Location: ../logout.php");
-    exit();
-}
+        }
+    }
+    else {
+        header("Location: ../index.php");
+        exit();
+    }
 ?>
