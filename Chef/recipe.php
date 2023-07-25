@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="../Owner/style.css">
 </head>
 <body>
+
 <?php @include 'navbar.php' ?>
+<div class="recipedetails">
 <?php
-include "connect.php";
+include "../connect.php";
 
 if (isset($_POST['dishID'])) {
-    $dishIDs        = $_POST['dishID'];
-    $dishName       = $chupain['dishName'];
-    $dateCreated    =  $chupain['dateCreated'];
-    $price          = $chupain['price'];
-
+    $dishIDs = $_POST['dishID'];
     $mamamoblue = mysqli_query($DBConnect, "SELECT * FROM dish WHERE dishID = $dishIDs");
     $chupain = mysqli_fetch_assoc($mamamoblue);
-
+    $dishName = $chupain['dishName'];
+    $dateCreated =  $chupain['dateCreated'];
+    $price =    $chupain['price'];
+    $dishImg =    $chupain['img'];
+    ?>
+    <div class="dishcontent">
+        <?php
     echo "<h2>Recipe Details</h2>";
     echo" <hr style='height:1px;color:black;background-color:black'>";
-    echo "<tr><td><img src='images/".$dishName.".png' class='dish-image'></td>";
+    echo "<tr><td><img src='$dishImg' class='dish-image'></td>";
     echo "<tr><td><h3>$dishName</h3></td>";     
     echo "<tr><td>Date Created: $dateCreated</td></tr><br />";
     echo "<tr><td>Price: $price</td></tr>";
+    echo "</div>";
     // Convert the dishIDs string into an array
     $dishIDArray = explode(",", $dishIDs);
 
@@ -53,6 +58,9 @@ if (isset($_POST['dishID'])) {
 }
 
 ?>
-<br/><a  href="chefhome.php"><button style="color:green;">Back</button> </a>
+<div class="dishcontent">
+<br/><a  href="chefhome.php"><button class="sbt_btn">Back</button> </a>
+</div>
+</div>
 </body>
 </html>
