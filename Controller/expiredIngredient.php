@@ -2,12 +2,10 @@
     session_start();
     include '../connect.php';
     if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
-        if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/addDish.php");
+        if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/viewRecipe.php");
         if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
         else if ($_SESSION['role'] === 'Inventory' || $_SESSION['role'] === 'Admin') {
             if ($_SERVER["REQUEST_METHOD"] === "POST") { 
-                include '../connect.php';;
-
                 $ingredientName = $_POST['ingredientName'];
                 $qty            = $_POST['qty'];
                 $unit           = $_POST['unit'];
@@ -30,11 +28,11 @@
                                             NOW(), 
                                             $id);");
 
-                header("Location: viewstock.php");
+                header("Location: manstockcount.php");
                 exit;
             }
             else {
-                header("Location: viewstock.php");
+                header("Location: manstockcount.php");
                 exit();
             }
         }

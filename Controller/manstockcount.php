@@ -11,100 +11,60 @@
 <head>
     <title>Manual Count</title>
     <link rel="stylesheet" type="text/css" href="../Owner/style.css">
-    <!-- <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script> -->
     <style>
-        /* Style the pop-up form */
-        .popup-form {
-            /* display: none; */
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            padding: 20px;
-            background-color: #000000;
-            border: 1px solid #ccc;
+        /* Add the styles for the submit button here */
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
             border-radius: 4px;
-            z-index: 9999;
+            cursor: pointer;
+            position: absolute;
+            top: 70px;
+            right: 100px;
         }
-  </style>
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+    <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <?php 
-        include 'navbar.php';
-        if (isset($_POST['ingredientName']) && isset($_POST['unitType'])) {
-            $ingredient = $_POST['ingredientName'];
-            $unitType   = $_POST['unitType'];
-
-            $unitQuery = (mysqli_query($DBConnect, "SELECT unitName, unitID FROM unit WHERE type = '$unitType';"));
-
-            if (!empty($ingredient) && !empty($unitType)) {
-    ?>
-                <script>
-                    function manualCount() {
-                        var tempContainer = document.createElement("div");
-                        tempContainer.innerHTML =
-                            '<div id="popupForm" class="popup-form">'                                                                             +
-                            '<form action="manualCount.php" method="POST">'                                                                       +
-                            '<p><?=$ingredient?></p>'                                                                                             +
-                            '<input type="hidden" name="ingredient" value="<?php echo $ingredient; ?>" />'                                        +
-                            '<label for="unit">Unit:</label>'                                                                                     +
-                            '<select name="unit" id="unit">'                                                                                      +
-                            '<option value="" disabled selected hidden></option>'                                                                 +
-                            <?php while($unit = mysqli_fetch_array($unitQuery)) { ?>
-                                '<option value="<?php echo $unit['unitID'] ?>" style="color: black;"><?php echo $unit['unitName'] ?></option>'    +
-                            <?php } ?>
-                            '</select><br />'                                                                                                     +
-                            '<label for="qty">Quantity: </label>'                                                                                 +
-                            '<input type="text" name="qty" style="color: black;"/>'                                                               +
-                            '<br />'                                                                                                              +
-                            '<button style="color: black;" type="submit">Confirm</button>'                                                        +
-                            '<button><a href="manstockcount.php" style="color: black;">Cancel</a></button>'                                       +
-                            '</form>'                                                                                                             +
-                            '</div>'                                                                                                              ;
-                        // Get the body element
-                        var body = document.body;
-
-                        // Append the new element just before the </body> tag
-                        body.insertBefore(tempContainer.firstChild, body.lastChild);
-                    }
-                    manualCount();
-                </script>
-    <?php
-            }
-        }
-    ?>
-
+    <?php include 'navbar.php'; ?>
     <div class="stockview">
-    <h1>Manual Count</h1>
+        <h1>Manual Count</h1>
         <div class="content">
             <table>
                 <tr>
                     <th scope="col">Ingredient</th>
                     <th scope="col">Manual Count</th>
                     <th scope="col">Measurement</th>
-                    <th scope="col">Manual Input</th>
                 </tr>
                 <tbody>
-                <?php 
-                    $query = mysqli_query($DBConnect, "SELECT i.ingredientName, i.ingredientID, u.type, u.unitName FROM ingredient i JOIN unit u ON i.unitID=u.unitID");
-                    while($retrieve = mysqli_fetch_array($query)) {
-                ?>
-                <tr>
-                    <td><?= $retrieve['ingredientName']?></td>
-                    <td><?= mysqli_fetch_array(mysqli_query($DBConnect, "SELECT mQuantity FROM disparity WHERE approved IS NULL AND ingredientID = ".$retrieve['ingredientID']." ORDER BY createdAt DESC;"))[0] ?? 0 ?></td>
-                    <td><?= $retrieve['unitName']?></td>
-                    <td>
-                        <form method="POST">
-                            <input type="hidden" name="ingredientName" value="<?= $retrieve['ingredientName'] ?>" />
-                            <input type="hidden" name="unitType" value="<?= $retrieve['type'] ?>" />
-                            <button type="Submit" id="openPopupButton" name="stocksubmit" class="inputbutton"  style="color: black;">Input Manual Count</button>
-                        </form>
-                    </td>
-                </tr>
-                <?php 
-                    }
-                ?>
+                    <?php
+                        $ids = [];
+                        $query = mysqli_query($DBConnect, "SELECT ingredientID FROM ingredient ORDER BY ingredientName;");
+                        while ($retrieve = mysqli_fetch_array($query)) $ids[] = $retrieve['ingredientID'];
+                        
+                        $arr = "[" . "'" . implode("', '", $ids) . "']";
+                    ?>
+                    <form action="manualCount.php" method="POST" onsubmit="return validateForm(<?=$arr?>)">
+                        <?php 
+                            $query = mysqli_query($DBConnect, "SELECT i.ingredientName, i.ingredientID, u.unitName, u.unitID FROM ingredient i JOIN unit u ON i.unitID=u.unitID ORDER BY i.ingredientName;");
+                            while($retrieve = mysqli_fetch_array($query)) {
+                                $manual = mysqli_fetch_array(mysqli_query($DBConnect, "SELECT mQuantity FROM disparity WHERE ingredientID = " . $retrieve['ingredientID'] . " ORDER BY createdAt DESC ;"));
+                        ?>
+                            <tr>
+                                <td><?= $retrieve['ingredientName']?></td>
+                                <td><input id="<?=$retrieve['ingredientID'] ?>" name="manual[]" type="text" value="<?=$manual['mQuantity'] ?? NULL ?>" style="color: black;"/></td>
+                                <td><?= $retrieve['unitName']?></td>
+                                <input type="hidden" name="ingredient[]" value="<?=$retrieve['ingredientID'] ?>" />
+                            </tr>
+                            <?php } ?>
+                        <button type="submit">Submit Count</button>
+                    </form>
                 </tbody>
             </table>
         </div>

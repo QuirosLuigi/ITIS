@@ -8,7 +8,7 @@
 	$timestamp = date("Y-m-d h:i:sa");
 
 	// RETRIEVE STOCKOUT records in orders and order_item table
-	$orderRecords = mysqli_query($DBConnect, "	SELECT 		d.dishName, SUM(oi.quantity * r.quantity) as stock_out, u.unitName, DATE(o.createdAt) as date
+	$orderRecords = mysqli_query($DBConnect, "	SELECT 		d.dishName, SUM(oi.quantity * r.quantity) as stock_out, u.unitName, o.createdAt
 												FROM 		ingredient i	JOIN recipe 		r	ON r.ingredientID=i.ingredientID
 																			JOIN dish			d	ON d.dishID=r.dishID
 																			JOIN order_item		oi	ON oi.dishID=d.dishID
@@ -17,11 +17,11 @@
 												WHERE   	DATE(o.createdAt) >= '$date1' 
 												AND     	DATE(o.createdAt) <= '$date2'
 												AND    		i.ingredientName='$ingredientName'
-												GROUP BY    DATE(o.createdAt)
-												ORDER BY	DATE(o.createdAt) DESC;");
+												GROUP BY    o.createdAt
+												ORDER BY	o.createdAt DESC;");
 
 	$orders = [];
-	while ($order = mysqli_fetch_array($orderRecords)) $orders[] = ['dishName' => $order['dishName'],'stock_out' => $order['stock_out'], 'unit' => $order['unitName'] ,'date' => $order['date']];
+	while ($order = mysqli_fetch_array($orderRecords)) $orders[] = ['dishName' => $order['dishName'],'stock_out' => $order['stock_out'], 'unit' => $order['unitName'] ,'createdAt' => $order['createdAt']];
 
 ?>
 	<div class="reportlabels">
@@ -34,7 +34,7 @@
 		<th>Dish Name</th>
 		<th>Quantity</th>
 		<th>Unit</th>
-		<th>Date</th>
+		<th>Date Time</th>
 
 		<?php
 			$counter = 0;
@@ -46,7 +46,7 @@
 			echo	"<td>" . $order['dishName']	    . "</td>";
 			echo	"<td>" . $order['stock_out']	. "</td>";
 			echo	"<td>" . $order['unit']		. "</td>";
-			echo	"<td>" . $order['date']			. "</td>";
+			echo	"<td>" . $order['createdAt']			. "</td>";
 			echo "</tr>";
 		} ?>
 		

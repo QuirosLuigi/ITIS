@@ -8,17 +8,17 @@
 	$timestamp = date("Y-m-d h:i:sa");
 
 	// RETRIEVE STOCKOUT records in expired table
-	$expiredRecords = mysqli_query($DBConnect, "	SELECT 		SUM(e.quantity) as expired, u.unitName ,DATE(e.expiredDate) as date
+	$expiredRecords = mysqli_query($DBConnect, "	SELECT 		SUM(e.quantity) as expired, u.unitName , e.expiredDate
 													FROM 		ingredient i			JOIN	expired e		ON e.ingredientID=i.ingredientID
 																						JOIN    unit	u	    ON u.unitID=i.unitID
 													WHERE 		DATE(e.expiredDate) 	>= '$date1' 	
 													AND 		DATE(e.expiredDate) 	<= '$date2' 
 													AND         i.ingredientName='$ingredientName'
-													GROUP BY 	DATE(e.expiredDate)
-													ORDER BY	DATE(e.expiredDate) DESC;");
+													GROUP BY 	e.expiredDate
+													ORDER BY	e.expiredDate DESC;");
 
 	$expireds = [];
-	while ($expired = mysqli_fetch_array($expiredRecords)) $expireds[] = ['stock_out' => $expired['expired'], 'unit' => $expired['unitName'], 'date' => $expired['date']];
+	while ($expired = mysqli_fetch_array($expiredRecords)) $expireds[] = ['stock_out' => $expired['expired'], 'unit' => $expired['unitName'], 'expiredDate' => $expired['expiredDate']];
 ?>
 	<div class="reportlabels">
 		<div class="backb"><a href="detailed_report.php?results=<?php echo $ingredientName; ?>&date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>" class="sbt_btn">Back</a></div>
@@ -30,14 +30,14 @@
 		<th>Ingredient</th>
 		<th>Quantity</th>
 		<th>Unit</th>
-		<th>Date</th>
+		<th>Date Time</th>
 
 		<?php foreach ($expireds as $expired) {
 			echo "<tr>";
-			echo	"<td>" . $ingredientName	    . "</td>";
-			echo	"<td>" . $expired['stock_out']	. "</td>";
-			echo	"<td>" . $expired['unit']		. "</td>";
-			echo	"<td>" . $expired['date']		. "</td>";
+			echo	"<td>" . $ingredientName	    	. "</td>";
+			echo	"<td>" . $expired['stock_out']		. "</td>";
+			echo	"<td>" . $expired['unit']			. "</td>";
+			echo	"<td>" . $expired['expiredDate']	. "</td>";
 			echo "</tr>";
 		} ?>
 		

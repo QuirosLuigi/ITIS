@@ -2,7 +2,7 @@
     session_start();
     include '../connect.php';
     if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
-        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/manstockcount.php");
         if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
         else if ($_SESSION['role'] === 'Chef' || $_SESSION['role'] === 'Admin') {
             if ($_SERVER["REQUEST_METHOD"] === "POST") {   
@@ -29,7 +29,7 @@
                         $defaultUnit = mysqli_fetch_array(mysqli_query($DBConnect, "SELECT unitID FROM unit WHERE type IN (SELECT type FROM unit WHERE unitID = $unit) AND conversion = 1;"));
                         $conversion = mysqli_fetch_array(mysqli_query($DBConnect, "SELECT conversion FROM unit WHERE unitID = $unit;"))[0];
 
-                        $newQty = round(floatval($qty) * floatval($conversion) * intval($multiplier), 2);
+                        $newQty = round(floatval($qty) * floatval($conversion), 2);
 
                         $ingredientQuery = mysqli_query($DBConnect, "SELECT ingredientID FROM Ingredient WHERE ingredientName = '$ingredient[$i]' LIMIT 1;");
                         $ingredientID = mysqli_fetch_array($ingredientQuery)['ingredientID'];

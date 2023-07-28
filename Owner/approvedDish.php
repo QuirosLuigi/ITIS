@@ -4,10 +4,9 @@
         if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
         if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/viewRecipe.php");
         if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
-        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/manstockcount.php");
         else if ($_SESSION['role'] === 'Admin') {
             if ($_SERVER["REQUEST_METHOD"] === "POST") {  
-                include '../connect.php';
                 $nDishID = $_POST['nDishID'];
                 $price = $_POST['price'];
 

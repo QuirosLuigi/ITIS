@@ -4,7 +4,7 @@
     if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
         if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/viewRecipe.php");
         if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
-        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/manstockcount.php");
         else if ($_SESSION['role'] === 'Admin') {
 ?>
 <!DOCTYPE html>
@@ -21,10 +21,10 @@
         <table class="reporttable">
             <th>Dish</th>
             <th>Type</th>
+            <th>Created By</th>
             <th>Actions</th>
             <?php 
-                include '../connect.php';
-                $selectQuery = mysqli_query($DBConnect, "   SELECT nDishID, dishName, type, dateCreated, approved, img 
+                $selectQuery = mysqli_query($DBConnect, "   SELECT nDishID, dishName, type, dateCreated, approved, img, createdBy
                                                             FROM pending_dish
                                                             WHERE approved IS NULL 
                                                             ORDER BY createdBy;");
@@ -38,6 +38,10 @@
                         </form>
                     </td>
                     <td><?= $pendingDish['type']?></td>
+                    <?php
+                        $name = mysqli_fetch_array(mysqli_query($DBConnect, "SELECT CONCAT(firstName , ' ', lastName) AS name FROM user WHERE employeeID = " . $pendingDish['createdBy'] . ";"));
+                    ?>
+                    <td><?= $name['name']?></td>
                     <td>
                         <form method="POST" action="dishentry.php">
                             <input type="hidden" name="nDishID" value="<?= $pendingDish['nDishID']; ?>"/>

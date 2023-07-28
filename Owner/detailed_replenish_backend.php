@@ -8,17 +8,17 @@
 	$timestamp = date("Y-m-d h:i:sa");
 
 	// RETRIEVE STOCKIN records in replenish table
-	$replenishRecords = mysqli_query($DBConnect, "	SELECT 		SUM(re.quantity) as stock_in, u.unitName ,DATE(re.boughtDate) as date
+	$replenishRecords = mysqli_query($DBConnect, "	SELECT 		SUM(re.quantity) as stock_in, u.unitName , re.boughtDate
 													FROM 		ingredient i			JOIN	replenish   re		ON re.ingredientID=i.ingredientID
 																						JOIN    unit	    u	    ON u.unitID=i.unitID
 													WHERE 		DATE(re.boughtDate) 	>= '$date1' 	
 													AND 		DATE(re.boughtDate) 	<= '$date2' 
 													AND         i.ingredientName='$ingredientName'
-													GROUP BY 	DATE(re.boughtDate)
-													ORDER BY	DATE(re.boughtDate) DESC;");
+													GROUP BY 	re.boughtDate
+													ORDER BY	re.boughtDate DESC;");
 
 	$replenishes = [];	
-	while ($replenish = mysqli_fetch_array($replenishRecords)) $replenishes[] = ['stock_in' => $replenish['stock_in'], 'unit' => $replenish['unitName'] ,'date' => $replenish['date']];
+	while ($replenish = mysqli_fetch_array($replenishRecords)) $replenishes[] = ['stock_in' => $replenish['stock_in'], 'unit' => $replenish['unitName'] ,'boughtDate' => $replenish['boughtDate']];
 ?>
 	<div class="reportlabels">
 		<div class="backb"><a href="detailed_report.php?results=<?php echo $ingredientName; ?>&date1=<?php echo $date1; ?>&date2=<?php echo $date2; ?>" class="sbt_btn">Back</a></div>
@@ -30,14 +30,14 @@
 		<th>Ingredient</th>
 		<th>Quantity</th>
 		<th>Unit</th>
-		<th>Date</th>
+		<th>Date Time</th>
 
 		<?php foreach ($replenishes as $replenish) {
 			echo "<tr>";
 			echo	"<td>" . $ingredientName	    . "</td>";
 			echo	"<td>" . $replenish['stock_in']	. "</td>";
 			echo	"<td>" . $replenish['unit']		. "</td>";
-			echo	"<td>" . $replenish['date']		. "</td>";
+			echo	"<td>" . $replenish['boughtDate']		. "</td>";
 			echo "</tr>";
 		} ?>
 		

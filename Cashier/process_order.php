@@ -2,7 +2,7 @@
     session_start();
     include '../connect.php';
     if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
-        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/manstockcount.php");
         if ($_SESSION['role']  === 'Chef') header("Location: ../Chef/addDish.php");
         else if ($_SESSION['role'] === 'Cashier' || $_SESSION['role'] === 'Admin') {
             if ($_SERVER["REQUEST_METHOD"] === "POST") {

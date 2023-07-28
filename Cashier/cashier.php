@@ -2,7 +2,7 @@
     session_start();
     include '../connect.php';
     if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
-        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/manstockcount.php");
         if ($_SESSION['role']  === 'Chef') header("Location: ../Chef/viewRecipe.php");
         else if ($_SESSION['role'] === 'Cashier' || $_SESSION['role'] === 'Admin') {
 ?>
@@ -22,10 +22,15 @@
 <body>
     <!-- Header -->
     <nav class="navbar navbar-light bg-nav" style="background-color: #3a4f8a">
-        <a class="navbar-brand text-white" href="#">Take Order</a>
-        <div class="col-md-2" id="search-el" style="display: none;">
-            <input type="text" class="form-control" id="search-input" placeholder="search item">
-        </div>
+    <a class="navbar-brand text-white" href="#">Take Order</a>
+    <?php if($_SESSION['role'] == "Admin") { ?>
+        <a href="../Owner/notification.php" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 448 512">
+                <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
+            </svg>
+            <span class="link-text" style="color: white; margin-left: 5px;">Admin View</span>
+        </a>
+    <?php } ?>
     </nav>
     <!-- Container -->
     <div class="contain">

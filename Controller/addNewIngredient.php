@@ -6,8 +6,6 @@
         if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
         else if ($_SESSION['role'] === 'Inventory' || $_SESSION['role'] === 'Admin') {
             if ($_SERVER["REQUEST_METHOD"] === "POST") { 
-                include '../connect.php';;
-
                 $ingredientName  = $_POST['ingredientName'];
                 $unitType        = $_POST['unitType'];
 
@@ -16,11 +14,11 @@
                                             FROM        unit 
                                             WHERE       type  = '$unitType' AND conversion = 1;");
                         
-                header("Location: viewstock.php");
+                header("Location: manstockcount.php");
                 exit;
             }
             else {
-                header("Location: viewstock.php");
+                header("Location: manstockcount.php");
                 exit();
             }
         }

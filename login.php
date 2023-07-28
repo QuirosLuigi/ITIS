@@ -43,7 +43,7 @@
                         header("Location: Owner/notification.php"); // Subject to change
                         break;
                     case "Inventory":
-                        header("Location: Controller/viewstock.php"); // Subject to change
+                        header("Location: Controller/manstockcount.php"); // Subject to change
                         break;
                     case "Chef":
                         header("Location: Chef/viewRecipe.php"); // Subject to change

@@ -1,5 +1,5 @@
 <?php
-	include "connect.php";
+	include "../connect.php";
 	$ingredientName = $_GET['name'];
 	$date1 = $_GET['date1'];
 	$date2 = $_GET['date2'];
@@ -24,10 +24,10 @@
 			$date = $result['date'];
 
 			if($value > 0){
-				$identifier = "Stock Out";
+				$identifier = "Missing";
 			}
 			else if($value < 0){
-				$identifier = "Stock In";
+				$identifier = "Surplus";
 				$value = abs($value);
 			}
 
@@ -47,8 +47,8 @@
 		<h3>Detailed expired report for <?php echo "$ingredientName";?> from <?php echo "$date1";?> to <?php echo "$date2"; ?></h3>
 	</div>
 	<table class="reporttable">
-		<th>Disparity</th>
-		<th>Stock In / Stock Out</th>
+		<th>Manual Count</th>
+		<th>Surplus / Missing</th>
 		<th>Date</th>
 
 		<?php foreach ($disparities as $disparity) {

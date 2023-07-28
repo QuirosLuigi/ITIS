@@ -20,17 +20,17 @@
 	while ($replenish = mysqli_fetch_array($replenishRecords)) $replenishes[] = ['stock_in' => $replenish['stock_in'], 'date' => $replenish['date']];
 
 	// RETRIEVE STOCKOUT records in orders and order_item table
-	$orderRecords = mysqli_query($DBConnect, "	SELECT 		SUM(oi.quantity * r.quantity) as stock_out, DATE(o.createdAt) as date
-												FROM 		ingredient i	JOIN recipe 		r	ON r.ingredientID=i.ingredientID
-																			JOIN dish			d	ON d.dishID=r.dishID
-																			JOIN order_item		oi	ON oi.dishID=d.dishID
-																			JOIN orders			o	ON o.orderID=oi.orderID
-																			JOIN unit			u	ON u.unitID=i.unitID
-												WHERE   	DATE(o.createdAt) >= '$date1' 
-												AND     	DATE(o.createdAt) <= '$date2'
-												AND    		i.ingredientName='$ingredientName'
-												GROUP BY	DATE(o.createdAt)
-												ORDER BY	DATE(o.createdAt) DESC;");
+	$orderRecords = mysqli_query($DBConnect, "		SELECT 		SUM(oi.quantity * r.quantity) as stock_out, DATE(o.createdAt) as date
+													FROM 		ingredient i	JOIN recipe 		r	ON r.ingredientID=i.ingredientID
+																				JOIN dish			d	ON d.dishID=r.dishID
+																				JOIN order_item		oi	ON oi.dishID=d.dishID
+																				JOIN orders			o	ON o.orderID=oi.orderID
+																				JOIN unit			u	ON u.unitID=i.unitID
+													WHERE   	DATE(o.createdAt) >= '$date1' 
+													AND     	DATE(o.createdAt) <= '$date2'
+													AND    		i.ingredientName='$ingredientName'
+													GROUP BY	DATE(o.createdAt)
+													ORDER BY	DATE(o.createdAt) DESC;");
 
 	$orders = [];
 	while ($order = mysqli_fetch_array($orderRecords)) $orders[] = ['stock_out' => $order['stock_out'], 'date' => $order['date']];
@@ -120,10 +120,10 @@
 
             <tr>
 				<th>Replenish</th>
-                <th>Disparities</th>
+                <th>Surplus</th>
                 <th>Orders</th>
                 <th>Expired</th>
-				<th>Disparities</th>
+				<th>Missing</th>
             </tr>
         </thead>
 

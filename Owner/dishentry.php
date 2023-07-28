@@ -4,7 +4,7 @@
     if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
         if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/viewRecipe.php");
         if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
-        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/manstockcount.php");
         else if ($_SESSION['role'] === 'Admin') {
 ?>
 <!DOCTYPE html>
@@ -20,7 +20,6 @@
     <h2> Enter Dish Details </h2>
     <div style="width: 50%">
         <?php 
-            include '../connect.php';
             $nDishID = $_POST['nDishID'];
 
             if(isset($_POST['approve'])) {
@@ -32,10 +31,10 @@
         <!-- dish image -->
         <img src="../Chef/<?= $pendingDish['img'] ?>" alt="../Chef/<?= $pendingDish['img'] ?>" style="width:100%; border-radius:10px" />
         <!-- dish form here  -->
-        <form action="approvedDish.php" method="POST">
+        <form action="approvedDish.php" method="POST" onsubmit="return validateForm('price')">
             <div>
                 <input type="hidden" name="nDishID" value="<?= $nDishID ?>" />
-                <input type="number"  min="0" name="price" placeholder="Enter Price" required style />
+                <input type="text" id="price" name="price" placeholder="Enter Price" style="color:black"required style />
                 <button type="submit" style="color:black">Submit</button>
             </div>
         </form>

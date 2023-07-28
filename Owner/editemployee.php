@@ -4,7 +4,7 @@
     if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
         if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/viewRecipe.php");
         if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
-        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/manstockcount.php");
         else if ($_SESSION['role'] === 'Admin') {
 ?>
 <html>
@@ -16,8 +16,6 @@
     <body>
 	<?php include 'navbar.php' ?>
 	<?php
-		include '../connect.php';
-
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			$empid = $_POST['employee_id'];
 	
@@ -55,7 +53,8 @@
 									<option value='Inventory' style="color: black;">Inventory</option>
 									<option value='Admin' style="color: black;">Admin</option>
 								</select>
-								<input type='submit' value='Update'>
+								<button type="submit" name="update">Update</button>
+								<button name="terminate" value="terminate" style="background: rgb(251,0,0); color: white;">Terminate</button>
 							</td>
 					</tr>
 				</form>

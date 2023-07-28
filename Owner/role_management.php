@@ -4,7 +4,7 @@
     if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
         if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/viewRecipe.php");
         if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
-        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/manstockcount.php");
         else if ($_SESSION['role'] === 'Admin') {
 ?>
 <!DOCTYPE html>
@@ -17,20 +17,24 @@
 <body>
     <?php @include 'navbar.php' ?>
     <?php
-        include '../connect.php';;
-
         if (isset($_POST['rolechoice'])) {
             // collect value of input field	
             $newrole = $_POST['rolechoice'];
             $employeeid = $_POST['employeeid'];
+                if(isset($_POST['update'])) {
                     $sql = "
                     UPDATE user SET role='$newrole' WHERE employeeID='$employeeid';";
                     $records = mysqli_query($DBConnect, $sql) or die(mysqli_error($DBConnect));
-            } 
-        
+                }
+                if(isset($_POST['terminate'])) {
+                    mysqli_query($DBConnect, "UPDATE user SET terminateDate = NOW() WHERE employeeID='$employeeid';");
+                    echo '<script>window.location.href = "role_management.php";</script>';
+                }
+        }
             $sql = "
             SELECT employeeID, firstName, lastName, role
             FROM user
+            WHERE terminateDate IS NULL
             ORDER BY employeeID;";
             $records = mysqli_query($DBConnect, $sql) or die(mysqli_error($DBConnect));
     ?>

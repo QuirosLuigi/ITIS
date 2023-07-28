@@ -4,7 +4,7 @@
     if(isset($_SESSION['username']) && isset($_SESSION['role'])) {
         if ($_SESSION['role'] === 'Chef') header("Location: ../Chef/viewRecipe.php");
         if ($_SESSION['role'] === 'Cashier') header("Location: ../Cashier/cashier.php");
-        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/viewstock.php");
+        if ($_SESSION['role'] === 'Inventory') header("Location: ../Controller/manstockcount.php");
         else if ($_SESSION['role'] === 'Admin') {
 ?>
 <!DOCTYPE html>
@@ -19,8 +19,7 @@
 <div class="reportview">
     <h2> Dish Details </h2>
     <div style="width: 50%">
-        <?php 
-            include '../connect.php';
+        <?php
             $nDishID = $_POST['nDishID'];
             $selectDishQuery = mysqli_query($DBConnect, "   SELECT nDishID, dishName, dateCreated, approved, img 
                                                             FROM pending_dish
